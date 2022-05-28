@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import "./UploadForm.css";
 
 const UploadForm = () => {
     const [file, setFile] = useState(null);
@@ -30,12 +31,11 @@ const UploadForm = () => {
 
     return  (
         <form onSubmit={onSubmit}>
-            <label htmlFor="image">{fileName}</label>
-            <input 
-                id="image" type="file" 
-                onChange = {imageSelectHandler}
-            />
-            <button type="submit">제출</button>
+            <div className="file-dropper">
+            {fileName}
+            <input id="image" type="file" onChange = {imageSelectHandler}/>
+            </div>
+            <button type="submit" style={{width: "100%", height: 25, borderRadius: 3, cursor: "pointer"}}>제출</button>
         </form>
     );
 };
