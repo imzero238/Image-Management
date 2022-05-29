@@ -2,6 +2,7 @@
 
 - [이미지 업로드 Percentage Bar](#percentage-bar)
 - [MongoDB 연동](#mongodb-연동)
+- [업로드한 이미지 바로 출력](#업로드한-이미지를-바로-출력하기)
 
 <br>
 
@@ -174,3 +175,11 @@ app.get("/images", async (req, res) => {
 ![png](/_img/get_images_result.png)
 
 MongoDB에 정상적으로 이미지를 가져오는 것을 확인할 수 있다.
+
+<br>
+
+## 업로드한 이미지를 바로 출력하기
+
+> Commit: https://github.com/evelyn82ny/Image-Management/commit/d801cc720cce7bf5bddea392d03c7aae59e9624c
+
+<img src="https://user-images.githubusercontent.com/54436228/170866356-ea1fdf25-68ce-42b9-b399-5256d5db445f.gif" style="margin-left: auto; margin-right: auto; display: block;" />
