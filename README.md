@@ -8,7 +8,7 @@
 
 > Commit: https://github.com/evelyn82ny/Image-Management/commit/cd4e68a1cc04fa59ca2e05c9b0bacfca9201e286
 
-<img src="https://github.com/evelyn82ny/Image-Management/issues/1#issue-1251764442">
+<img src="https://user-images.githubusercontent.com/54436228/170849418-2eaf4f0e-384f-479a-a2bc-00377bd46252.gif">
 
 - 이미지 업로드되는 상태를 나타내기 위한 Percentage bar
 - 업로드한 이미지에 대해 제출 버튼을 누르면 서버에 전달
