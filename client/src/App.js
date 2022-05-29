@@ -6,7 +6,7 @@ import ImageList from "./components/ImageList.js";
 
 const App = () => {
   return (
-    <div>
+    <div style={{ maxWidth: 600, margin: "auto"}}>
       <ToastContainer />
       <h3>Image Management</h3>
       <UploadForm />
