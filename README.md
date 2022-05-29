@@ -182,4 +182,4 @@ MongoDB에 정상적으로 이미지를 가져오는 것을 확인할 수 있다
 
 > Commit: https://github.com/evelyn82ny/Image-Management/commit/d801cc720cce7bf5bddea392d03c7aae59e9624c
 
-<img src="https://user-images.githubusercontent.com/54436228/170866356-ea1fdf25-68ce-42b9-b399-5256d5db445f.gif" style="margin-left: auto; margin-right: auto; display: block;" />
+<img src="https://user-images.githubusercontent.com/54436228/170871509-aaf832cc-ab21-43d6-8a4c-a3fd8fbb44bc.gif">
