@@ -10,7 +10,7 @@ const ImageList = () => {
             .catch((err) => console.error(err));
     }, []);
     const imgList = images.map((image) => (
-        <img style={{width:"100%"}} src={`http://localhost:5050/uploads/${image.key}`} />
+        <img key={image.key} style={{width:"100%"}} src={`http://localhost:5050/uploads/${image.key}`} />
     ));
     return (
         <div>
