@@ -82,6 +82,8 @@ const UploadForm = () => {
 
 ### 이미지 업로드 후 처음 상태로 돌아가기
 
+<img src = "https://user-images.githubusercontent.com/54436228/170850608-38df45d2-bde1-4225-9a80-70ab9f2d217b.gif">
+
 ```js
 const onSubmit = async (e) => {
         try {
