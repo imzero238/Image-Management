@@ -84,6 +84,8 @@ const UploadForm = () => {
 
 <img src = "https://user-images.githubusercontent.com/54436228/170850608-38df45d2-bde1-4225-9a80-70ab9f2d217b.gif">
 
+![png](/_img/convert_to_initial_state.png)
+
 ```js
 const onSubmit = async (e) => {
         try {
