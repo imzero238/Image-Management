@@ -13,6 +13,6 @@ const App = () => {
       <ImageList />
     </div>
   );
-}
+};
 
 export default App;

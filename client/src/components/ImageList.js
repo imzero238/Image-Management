@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useContext } from "react";
+import { ImageContext } from "../context/ImageContext";
 
 const ImageList = () => {
-    const [images, setImages] = useState([]);
-    useEffect(() => {
-        axios
-            .get("/images")
-            .then((result) => setImages(result.data))
-            .catch((err) => console.error(err));
-    }, []);
+    const [images] = useContext(ImageContext);
     const imgList = images.map((image) => (
-        <img key={image.key} style={{width:"100%"}} src={`http://localhost:5050/uploads/${image.key}`} />
+        <img 
+            key={image.key} 
+            style={{width:"33%"}} 
+            src={`http://localhost:5050/uploads/${image.key}`} />
     ));
     return (
         <div>
