@@ -24,3 +24,8 @@
     transition: 0.5s;
 }
 
+.image-preview {
+    width: 25%;
+    display: block;
+    margin: 0 auto 20px auto;
+}
