@@ -183,3 +183,159 @@ MongoDB에 정상적으로 이미지를 가져오는 것을 확인할 수 있다
 > Commit: https://github.com/evelyn82ny/Image-Management/commit/d801cc720cce7bf5bddea392d03c7aae59e9624c
 
 <img src="https://user-images.githubusercontent.com/54436228/170871509-aaf832cc-ab21-43d6-8a4c-a3fd8fbb44bc.gif">
+
+<br>
+
+## 계정 관리
+
+```js
+const UserSchema = new mongoose.Schema(
+    {
+        name: { type: String, required: true},
+        username: { type: String, required: true, unique: true },
+        password: {type: String, required: true}
+    },
+    { timestamps: true }
+);
+module.exports = mongoose.model("user", UserSchema);
+```
+
+```name```, ```username```, ```password``` field를 갖는 user로 회원가입, 로그인 그리고 로그아웃 기능을 만든다.
+<br>
+
+### Signup
+
+> Commit: https://github.com/evelyn82ny/Image-Management/commit/05fe39145ca1362246dcc824fe05298f2ae56e6a
+
+![png](/_img/signup.png)
+
+- POST: ```http://localhost:5050/users/singup```
+- JSON 형식으로 ```name```, ```username```, ```password``` field 값을 채워 POST 요청
+
+<br>
+
+> Hashed password commit: https://github.com/evelyn82ny/Image-Management/commit/8d3912dbae530a2bb1ad215ef479a5e9940d7c64
+
+
+```js
+userRouter.post("/register", async(req, res) => {
+    const hashedPassword = await hash(req.body.password, 10);
+    await new User({
+        name: req.body.name,
+        username: req.body.username,
+        hashedPassword
+    }).save();
+});
+```
+
+- 네트워크 상에서 비밀번호를 전달하는 것은 위험
+- 비밀번호 암호화를 위해 ```bcryptjs``` 모듈의 ```hash()``` 사용
+- hash(field, salt) -> salt 값이 클수록 더 복잡한 값이 생성되지만 많은 시간 소요
+<br>
+
+```js
+const UserSchema = new mongoose.Schema(
+    {
+        name: { type: String, required: true},
+        username: { type: String, required: true, unique: true },
+        hashedPassword: {type: String, required: true}
+    },
+    { timestamps: true }
+};
+```
+user collection에서 ```password```를 ```hashedPassword```로 변경한다.
+<br>
+
+> Apply session commit: https://github.com/evelyn82ny/Image-Management/commit/b1e9a53be4e99149a6950a146662b9139874ccbb
+
+```js
+userRouter.post("/signup", async(req, res) => {
+    try {
+        const hashedPassword = await hash(req.body.password, 10);
+        const user = await new User({
+            name: req.body.name,
+            username: req.body.username,
+            hashedPassword,
+            sessions: [{ createdAt: new Date() }]
+        }).save();
+        const session = user.sessions[0];
+        res.json({ 
+            message: "user registered",
+            sessionId: session._id,
+            name: user.name
+        });
+    }// 생략
+});
+```
+
+- 위 사진을 보면 회원 가입 후 server에서 sessionid를 생성
+- 로그인상태를 유지하기 위해 Session 적용
+- User를 생성할 때 session 을 추가
+- 같은 계정을 여러 기기에서 접속하는 경우를 생각해 사용자는 여러 SessionId를 갖게 함
+- 즉, sessions 에 추가
+- 회원가입 후 만들어지는 session은 첫번째 session 이므로 ```user.sessions[0]``` 으로 접근
+<br>
+
+### Login
+
+![png](/_img/login.png)
+
+```js
+userRouter.patch("/login", async (req, res) => {
+    try{
+        const user = await User.findOne({ username: req.body.username });
+        const isValid = await compare(req.body.password, user.hashedPassword);
+        if(!isValid)
+            throw new Error("입력하신 정보가 올바르지 않습니다.");
+        user.sessions.push({ createdAt: new Date() });
+        const session = user.sessions[user.sessions.length - 1];
+        await user.save();
+        res.json({ 
+            message: "login success",
+            sessionId: session._id,
+            name: user.name
+        });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+```
+- PATCH: ```http://localhost:5050/users/login```   
+- 로그인 시 sessionid 만 추가하기 때문에 POST 에서 PATCH 로 변경
+- JSON 형식으로 ```username```과 ```password``` 를 작성해 PATCH 요청
+<br>
+
+- password는 ```bcryptjs``` 모듈의 ```hash()``` 사용해 Hashed 함
+- 그렇기 떄문에 ```bcryptjs``` 모듈의 ```compare()``` 로 사용자가 입력한 ```password```와 DB에서 관리되는 ```hashedPassword```를 비교
+<br>
+
+### Log out
+
+> Commit: https://github.com/evelyn82ny/Image-Management/commit/ff20682fe8ef27b2e6df1f17700a09731c708a1b
+
+![png](/_img/logout.png)
+
+```js
+userRouter.patch("/logout", async (req, res)=> {
+    try {
+        const { sessionid } = req.headers;
+        if(!mongoose.isValidObjectId(sessionid)) 
+            throw new Error("invalid sessionid");
+        const user = await User.findOne({ "sessions._id": sessionid });
+        if(!user)
+            throw new Error("No applicable users");
+        await User.updateOne(
+            { _id: user.id },
+            { $pull: { sessions: { _id: sessionid } } }
+        );
+        res.json({ message: "log-out" });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+```
+
+- PATCH: ```http://localhost:5050/users/logout``` 
+- 한 사용자의 여러 sessonid 중 해당되는 sessionid 를 삭제하므로 PATCH
+- request header 로 sessionid를 넘겨줌
+- ```updateOne()```으로 해당되는 sessionid 를 삭제하는데 ```$pull``` 사용하면 수정됨
