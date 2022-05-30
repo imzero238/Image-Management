@@ -3,7 +3,7 @@ const userRouter = Router();
 const User = require("../models/User");
 const { hash, compare } = require("bcryptjs");
 
-userRouter.post("/register", async(req, res) => {
+userRouter.post("/signup", async(req, res) => {
     try {
         if(req.body.password.length < 6) 
             throw new Error("password는 6자 이상으로 입력해주세요.");
@@ -28,7 +28,7 @@ userRouter.post("/register", async(req, res) => {
     }
 });
 
-userRouter.post("/login", async (req, res) => {
+userRouter.patch("/login", async (req, res) => {
     try{
         const user = await User.findOne({ username: req.body.username });
         const isValid = await compare(req.body.password, user.hashedPassword);
