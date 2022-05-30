@@ -1,8 +1,15 @@
 # Image Management
 
+- Front-end: REACT
+- Back-end: Node.js
+- Database: MongoDB
+
+<br>
+
 - [이미지 업로드 Percentage Bar](#percentage-bar)
 - [MongoDB 연동](#mongodb-연동)
 - [업로드한 이미지 바로 출력](#업로드한-이미지를-바로-출력하기)
+- [계정 관리 및 Session 적용](#계정-관리)
 
 <br>
 
@@ -68,6 +75,8 @@ export default ProgressBar;
 
 - ProgressBar.css 에서 스타일링하고
 - 전달받은 percent를 ```percent%``` 형식으로 출력
+
+<br>
 
 ```js
 const UploadForm = () => {
@@ -148,8 +157,7 @@ module.exports = mongoose.model("image", ImageSchema);
 ```
 
 - ```_id```: MongoDB 에서 자동 생성
-- ```key```: 이미지의 filename field (uuid로 생성되기 때문에 중복될 가능성 거의 없음)
-    - 이미지의 originalname field 는 중복될 가능성 있음
+- ```key```: 이미지의 filename field (uuid로 생성되기 때문에 중복될 가능성 거의 없음, 이미지의 originalname field 는 중복될 가능성 있음)
 - ```originalFileName```: 이미지의 originalname field
 <br>
 
@@ -158,6 +166,7 @@ module.exports = mongoose.model("image", ImageSchema);
 ![png](/_img/post_images_mongodb_result.png)
 
 MongoDB에 정상적으로 저장됨을 확인할 수 있다.
+
 <br>
 
 ### GET images
@@ -230,7 +239,7 @@ userRouter.post("/register", async(req, res) => {
 
 - 네트워크 상에서 비밀번호를 전달하는 것은 위험
 - 비밀번호 암호화를 위해 ```bcryptjs``` 모듈의 ```hash()``` 사용
-- hash(field, salt) -> salt 값이 클수록 더 복잡한 값이 생성되지만 많은 시간 소요
+- ```hash(field, salt)``` -> salt 값이 클수록 더 복잡한 값이 생성되지만 많은 시간 소요
 <br>
 
 ```js
@@ -243,7 +252,8 @@ const UserSchema = new mongoose.Schema(
     { timestamps: true }
 };
 ```
-user collection에서 ```password```를 ```hashedPassword```로 변경한다.
+- user collection에서 ```password```를 ```hashedPassword```로 변경
+
 <br>
 
 > Apply session commit: https://github.com/evelyn82ny/Image-Management/commit/b1e9a53be4e99149a6950a146662b9139874ccbb
@@ -306,7 +316,7 @@ userRouter.patch("/login", async (req, res) => {
 <br>
 
 - password는 ```bcryptjs``` 모듈의 ```hash()``` 사용해 Hashed 함
-- 그렇기 떄문에 ```bcryptjs``` 모듈의 ```compare()``` 로 사용자가 입력한 ```password```와 DB에서 관리되는 ```hashedPassword```를 비교
+- 그렇기 때문에 ```bcryptjs``` 모듈의 ```compare()``` 로 사용자가 입력한 ```password```와 DB에서 관리되는 ```hashedPassword```를 비교
 <br>
 
 ### Log out
