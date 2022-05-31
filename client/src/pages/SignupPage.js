@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CustomInput from "../components/CustomInput";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const SignupPage = () => {
     const [name, setName] = useState("");
@@ -8,7 +9,7 @@ const SignupPage = () => {
     const [password, setPassword] = useState("");
     const [passwordCheck, setPasswordCheck] = useState("");
 
-    const submitHandler = e => {
+    const submitHandler = async(e) => {
         try {
             e.preventDefault();
             if(username.length < 3)
@@ -16,7 +17,11 @@ const SignupPage = () => {
             if(password.length < 6)
                 throw new Error("password는 6자 이상만 입력 가능합니다.");
             if(password !== passwordCheck)
-                throw new Error("비밀번호가 일치하지 않습니다.")
+                throw new Error("비밀번호가 일치하지 않습니다.");
+
+            const result = await axios.post("/users/signup", { name, username, password });
+            console.log({ result });
+            toast.success("Signup success!");
         } catch (err) {
             console.error(err);
             toast.error(err.message);
