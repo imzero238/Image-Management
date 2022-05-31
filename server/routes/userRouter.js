@@ -62,4 +62,20 @@ userRouter.patch("/logout", async (req, res)=> {
     }
 });
 
+userRouter.get("/me", (req, res) => {
+    try {
+        if(!req.user)
+            throw new Error("접근권한이 없습니다.");
+        res.json({
+            message: "successful access",
+            sessionId: req.headers.sessionid,
+            name: req.user.name,
+            userId: req.user._id
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ message: err.message });
+    }
+});
+
 module.exports = { userRouter };
