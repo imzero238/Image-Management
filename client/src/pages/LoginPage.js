@@ -3,11 +3,13 @@ import CustomInput from "../components/CustomInput";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom"; 
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [_, setMe] = useContext(AuthContext);
+    const [, setMe] = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const loginHandler = async (e) => {
         try {
@@ -21,6 +23,7 @@ const LoginPage = () => {
                 userId: result.data.userId
             });
             toast.success("login success!");
+            navigate('/');
         } catch (err) {
             console.error(err);
             toast.error(err.message);

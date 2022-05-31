@@ -3,6 +3,7 @@ import CustomInput from "../components/CustomInput";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
     const [name, setName] = useState("");
@@ -10,6 +11,7 @@ const SignupPage = () => {
     const [password, setPassword] = useState("");
     const [passwordCheck, setPasswordCheck] = useState("");
     const [me, setMe] = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const submitHandler = async(e) => {
         try {
@@ -28,6 +30,7 @@ const SignupPage = () => {
                 name: result.data.name
             });
             toast.success("Signup success!");
+            navigate('/');
         } catch (err) {
             console.error(err);
             toast.error(err.message);
