@@ -5,11 +5,13 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import { Routes, Route } from "react-router-dom";
+import ToolBar from "./components/ToolBar";
 
 const App = () => {
   return (
     <div style={{ maxWidth: 600, margin: "auto"}}>
       <ToastContainer />
+      <ToolBar />
       <Routes>
         <Route path="/" exact element={< MainPage />} />
         <Route path="/auth/signup" exact element={< SignupPage />} />
