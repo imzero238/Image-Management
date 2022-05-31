@@ -1,9 +1,22 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const ToolBar = () => {
     const [me, setMe] = useContext(AuthContext);
+
+    const logoutHandler = async () => {
+        try {
+            await axios.patch("/users/logout");
+            setMe();
+            toast.success("log-out success!");
+        } catch (err) {
+            console.error(err);
+            toast.error(err.message);
+        }
+    };
 
     return (
         <div>
@@ -11,7 +24,7 @@ const ToolBar = () => {
                 <span>home</span>
             </Link>
             {me ? (
-                <span style={{ float: "right" }}>log out</span>
+                <span onClick={logoutHandler} style={{ float: "right" }}>log out</span>
             ) : (
                 <>
                     <Link to="/auth/login">
