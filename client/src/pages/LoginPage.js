@@ -3,7 +3,7 @@ import CustomInput from "../components/CustomInput";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
@@ -26,7 +26,11 @@ const LoginPage = () => {
             navigate('/');
         } catch (err) {
             console.error(err);
-            toast.error(err.message);
+            
+            if(err.response) 
+                toast.error(err.response.data.message);
+            else if(err.message)
+                toast.error(err.message);
         }
     };
 

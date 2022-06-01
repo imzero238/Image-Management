@@ -16,7 +16,7 @@ const SignupPage = () => {
     const submitHandler = async(e) => {
         try {
             e.preventDefault();
-            if(username.length < 3)
+            if(username.length < 3) 
                 throw new Error("username은 3자 이상만 입력 가능합니다.");
             if(password.length < 6)
                 throw new Error("password는 6자 이상만 입력 가능합니다.");
@@ -33,7 +33,11 @@ const SignupPage = () => {
             navigate('/');
         } catch (err) {
             console.error(err);
-            toast.error(err.message);
+            
+            if(err.response)
+                toast.error(err.response.data.message);
+            else if(err.message) 
+                toast.error(err.message);
         }
     };
 

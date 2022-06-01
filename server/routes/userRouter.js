@@ -6,11 +6,6 @@ const mongoose = require("mongoose");
 
 userRouter.post("/signup", async(req, res) => {
     try {
-        if(req.body.password.length < 6) 
-            throw new Error("password는 6자 이상으로 입력해주세요.");
-        if(req.body.username.length < 3)
-            throw new Error("username은 3자 이상으로 입력해주세요.");
-        
         const hashedPassword = await hash(req.body.password, 10);
         const user = await new User({
             name: req.body.name,
@@ -25,17 +20,21 @@ userRouter.post("/signup", async(req, res) => {
             name: user.name
         });
     } catch (err) {
-        console.log( err.mesage );
-        res.status(400).json({ message: err.message });
+        if(err.name == "MongoServerError") 
+            res.status(400).json({ message: "이미 존재하는 username 입니다." });
+        else 
+            res.status(400).json({ message: err.message });
     }
 });
 
 userRouter.patch("/login", async (req, res) => {
     try{
         const user = await User.findOne({ username: req.body.username });
+        if(!user)
+            throw new Error("존재하는 username이 없습니다.");
         const isValid = await compare(req.body.password, user.hashedPassword);
         if(!isValid)
-            throw new Error("입력하신 정보가 올바르지 않습니다.");
+            throw new Error("잘못된 비밀번호 입니다.");
         user.sessions.push({ createdAt: new Date() });
         const session = user.sessions[user.sessions.length - 1];
         await user.save();
@@ -45,13 +44,15 @@ userRouter.patch("/login", async (req, res) => {
             name: user.name
         });
     } catch (err) {
+        console.log( err.message );
         res.status(400).json({ message: err.message });
     }
 });
 
 userRouter.patch("/logout", async (req, res)=> {
     try {
-        if(!req.user) throw new Error("invalid sessionid");
+        if(!req.user) 
+            throw new Error("invalid sessionid");
         await User.updateOne(
             { _id: req.user.id },
             { $pull: { sessions: { _id: req.headers.sessionid } } }
