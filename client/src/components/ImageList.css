@@ -1,7 +1,6 @@
 .image-list-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
 }
 
 .image-list-container img {

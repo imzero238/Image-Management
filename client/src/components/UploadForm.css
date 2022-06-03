@@ -29,3 +29,9 @@
     display: block;
     margin: 0 auto 20px auto;
 }
+
+.image {
+    width: 70%;
+    display: block;
+    margin: 20px auto auto auto;
+}
