@@ -19,10 +19,12 @@ export const ImageProvider = (prop) => {
 
     useEffect(() => {
         if(me){
+            setTimeout(() => {
             axios
                 .get("/users/me/images")
                 .then((result) => setPrivateImages(result.data))
                 .catch((err) => console.erroro(err))
+            }, 0);
         } else {
             setPrivateImages([]);
             setIsPublic(true);
