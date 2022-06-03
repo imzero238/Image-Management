@@ -15,6 +15,7 @@
     - [이미지 업로드 Percentage Bar](#percentage-bar)
     - [MongoDB 연동](#mongodb-연동)
     - [업로드한 이미지 바로 출력](#업로드한-이미지를-바로-출력하기)
+    - [이미지 좋아요 반영](#like-and-unlike)
 
 
 <br>
@@ -38,7 +39,7 @@ module.exports = mongoose.model("user", UserSchema);
 
 ## Signup
 
-> Commit: https://github.com/evelyn82ny/Image-Management/commit/05fe39145ca1362246dcc824fe05298f2ae56e6a
+> Create a sign-up API commit: https://github.com/evelyn82ny/Image-Management/commit/05fe39145ca1362246dcc824fe05298f2ae56e6a
 
 ![png](/_img/signup.png)
 
@@ -160,7 +161,7 @@ userRouter.patch("/login", async (req, res) => {
 
 ## Log out
 
-> Commit: https://github.com/evelyn82ny/Image-Management/commit/ff20682fe8ef27b2e6df1f17700a09731c708a1b
+> Create a logout API commit: https://github.com/evelyn82ny/Image-Management/commit/ff20682fe8ef27b2e6df1f17700a09731c708a1b
 
 <img src="https://user-images.githubusercontent.com/54436228/171525836-c18727eb-45da-4de6-b41d-90f5d6081bed.gif">
 
@@ -235,9 +236,11 @@ useEffect(() => {
 
 - MongoDB로 사용자와 사진을 관리
 
+<br>
+
 ## Percentage Bar
 
-> Commit: https://github.com/evelyn82ny/Image-Management/commit/cd4e68a1cc04fa59ca2e05c9b0bacfca9201e286
+> Create a bar that displays percentages commit: https://github.com/evelyn82ny/Image-Management/commit/cd4e68a1cc04fa59ca2e05c9b0bacfca9201e286
 
 <img src="https://user-images.githubusercontent.com/54436228/170850429-f2f7197d-012a-459f-8901-406265178709.gif">
 
@@ -348,7 +351,7 @@ const onSubmit = async (e) => {
 
 ## MongoDB 연동
 
-> Commit: https://github.com/evelyn82ny/Image-Management/commit/711ec603ec313ddb7321fa20d8c22c9c3aa0edce
+> Create ImageSchema Commit: https://github.com/evelyn82ny/Image-Management/commit/711ec603ec313ddb7321fa20d8c22c9c3aa0edce
 
 ```text
 {
@@ -411,8 +414,157 @@ MongoDB에 정상적으로 이미지를 가져오는 것을 확인할 수 있다
 
 ## 업로드한 이미지를 바로 출력하기
 
-> Commit: https://github.com/evelyn82ny/Image-Management/commit/d801cc720cce7bf5bddea392d03c7aae59e9624c
+> Display uploaded images right away commit: https://github.com/evelyn82ny/Image-Management/commit/d801cc720cce7bf5bddea392d03c7aae59e9624c
 
 <img src="https://user-images.githubusercontent.com/54436228/170871509-aaf832cc-ab21-43d6-8a4c-a3fd8fbb44bc.gif">
 
+```js
+const UploadForm = () => {
+    const [images, setImages] = useContext(ImageContext);
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append("image", file);
+        try {
+            const res = await axios.post("/images", formData, {
+                headers: {"Content-Type": "multipart/form-data"},
+                onUploadProgress: (e) => {
+                    setPercent(Math.round((100 * e.loaded) / e.total));
+                },
+            });
+            setImages([...images, res.data]);
+            toast.success("이미지 업로드 성공!");
+        // 생략
+        }
+    };
+```
+
+- 이미지를 업로드하면 ```setImages([...images, res.data])``` 기존에 저장된 이미지에 새로운 이미지를 추가
 <br>
+
+```js
+const ImageList = () => {
+    const [images] = useContext(ImageContext);
+    const imgList = images.map((image) => (
+        <img 
+            key={image.key} 
+            style={{width:"33%"}} 
+            src={`http://localhost:5050/uploads/${image.key}`} />
+    ));
+    return (
+        <div>
+            <h4>Image List</h4>
+            {imgList}
+        </div>
+    );
+};
+```
+
+- image를 배열로 가져와 출력
+
+<br>
+
+## 이미지 공개/비공개 설정
+
+> Set photo access authority commit: https://github.com/evelyn82ny/Image-Management/commit/6a1d6c23ffff2c18144257fa8b83aa29fa02128a
+
+```js
+const ImageSchema = new mongoose.Schema({
+    user:{
+        _id: {type: mongoose.Types.ObjectId, required: true, index: true},
+        name: { type: String, required: true},
+        username: {type: String, required: true}
+    },
+    public: { type: Boolean, required: true, default: false },
+    key: { type: String, required: true },
+    originalFileName: { type: String, required: true}
+},
+{timestamps: true}
+);
+
+module.exports = mongoose.model("image", ImageSchema);
+```
+
+- ```user```: Image의 소유자 정보를 추가
+- ```public```: Boolean 타입으로 true(모든 사용자가 볼 수 있음) / false(소유자만 볼 수 있음)
+
+<br>
+
+```js
+imageRouter.get("/", async (req, res) => {
+    const images = await Image.find({ public: true });
+    res.json(images);
+});
+```
+- 모든 사용자의 이미지를 보고 싶어 ```http://localhost:5050/images``` GET 요청하면 권한이 public 인 것만 접근 가능
+
+<br>
+
+```js
+userRouter.get("/me/images", async(req, res) => {
+    try{
+        if(!req.user)
+            throw new Error("접근권한이 없습니다.");
+            const images = await Image.find({ "user._id": req.user.id });
+            res.json(images);
+    } catch(err) {
+        console.log(err);
+        res.status(400).json({ message: err.message });
+    }
+});
+```
+- 자신의 이미지를 요청할 경우 권한에 상관없이 모두 가져옴
+
+<br>
+
+## Like and Unlike
+
+> Like and Unlike commit: https://github.com/evelyn82ny/Image-Management/commit/bf930e553c0de7a94787ba90d568de09c4f45c77
+
+```js
+const ImageSchema = new mongoose.Schema({
+    user:{
+        _id: {type: mongoose.Types.ObjectId, required: true, index: true},
+        name: { type: String, required: true},
+        username: {type: String, required: true}
+    },
+    public: { type: Boolean, required: true, default: false },
+    likes: [{ type: mongoose.Types.ObjectId }],
+    key: { type: String, required: true },
+    originalFileName: { type: String, required: true}
+},
+{timestamps: true}
+);
+
+module.exports = mongoose.model("image", ImageSchema);
+```
+
+- image를 좋아요한 userId를 배열로 설정
+
+<br>
+
+```js
+imageRouter.patch("/:imageId/like", async (req, res) => {
+    try{
+        if(!req.user)
+            throw new Error("권한이 없습니다.");
+        if(!mongoose.isValidObjectId(req.params.imageId))
+        throw new Error("올바르지 않는 imageId 입니다.");
+        const image = await Image.findOneAndUpdate(
+            {_id: req.params.imageId}, 
+            {$addToSet: { likes: req.user.id }}, 
+            {new: true}
+        );
+        res.json(image);
+    } catch(err){
+        console.log(err);
+        res.status(400).json({ message: err.message });
+    }
+});
+```
+
+- 이미지에 ```좋아요```를 반영하기 위해 ```http://localhost:5050/images/imageId/like``` PATCH 요청
+- ```findOneAndUpdate``` 를 사용하며 Update 후 결과를 받기 위해 ```new: true```로 설정
+    - ```new: false```가 default
+- 한 이미지에 같은 아이디가 중복되는 것을 막기 위해 ```$addToSet``` 사용
