@@ -24,7 +24,7 @@ const ToolBar = () => {
                 <span>home</span>
             </Link>
             {me ? (
-                <span onClick={logoutHandler} style={{ float: "right" }}>log out ({me.name})</span>
+                <span onClick={logoutHandler} style={{ float: "right", cursor: "pointer" }}>log out ({me.name})</span>
             ) : (
                 <>
                     <Link to="/auth/login">
