@@ -53,4 +53,40 @@ imageRouter.delete("/:imageId", async (req, res) => {
     }
 });
 
+imageRouter.patch("/:imageId/like", async (req, res) => {
+    try{
+        if(!req.user)
+            throw new Error("권한이 없습니다.");
+        if(!mongoose.isValidObjectId(req.params.imageId))
+        throw new Error("올바르지 않는 imageId 입니다.");
+        const image = await Image.findOneAndUpdate(
+            {_id: req.params.imageId}, 
+            {$addToSet: { likes: req.user.id }}, 
+            {new: true}
+        );
+        res.json(image);
+    } catch(err){
+        console.log(err);
+        res.status(400).json({ message: err.message });
+    }
+});
+
+imageRouter.patch("/:imageId/unlike", async (req, res) => {
+    try{
+        if(!req.user)
+            throw new Error("권한이 없습니다.");
+        if(!mongoose.isValidObjectId(req.params.imageId))
+        throw new Error("올바르지 않는 imageId 입니다.");
+        const image = await Image.findOneAndUpdate(
+            {_id: req.params.imageId},
+            {$pull: {likes: req.user.id}},
+            {new: true}
+        );
+        res.json(image);
+    } catch(err){
+        console.log(err);
+        res.status(400).json({ message: err.message });
+    }
+});
+
 module.exports = { imageRouter };
