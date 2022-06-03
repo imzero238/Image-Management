@@ -51,7 +51,7 @@ const UploadForm = () => {
 
     return  (
         <form onSubmit={onSubmit}>
-            <img src={imgSrc} className="image-preview" />
+            <img src={imgSrc} className="image-preview" alt="" />
             <ProgressBar percent ={percent} />
             <div className="file-dropper">
             {fileName}

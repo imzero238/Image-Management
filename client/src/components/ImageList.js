@@ -5,6 +5,7 @@ const ImageList = () => {
     const [images] = useContext(ImageContext);
     const imgList = images.map((image) => (
         <img 
+            alt=""
             key={image.key} 
             style={{width:"33%"}} 
             src={`http://localhost:5050/uploads/${image.key}`} />
