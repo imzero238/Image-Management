@@ -35,3 +35,9 @@
     display: block;
     margin: 20px auto auto auto;
 }
+
+.button {
+    width: 12%;
+    font-size: 15px;
+    border-radius: 5%;
+}

@@ -21,17 +21,17 @@ const ToolBar = () => {
     return (
         <div>
             <Link to="/">
-                <span>home</span>
+                <span style={{ fontSize: 18 }} >home</span>
             </Link>
             {me ? (
-                <span onClick={logoutHandler} style={{ float: "right", cursor: "pointer" }}>log out ({me.name})</span>
+                <span onClick={logoutHandler} style={{ float: "right", cursor: "pointer", fontSize: 18 }}>log out ({me.name})</span>
             ) : (
                 <>
                     <Link to="/auth/login">
-                        <span style={{ float: "right" }}>login</span>
+                        <span style={{ float: "right", fontSize: 18 }}>login</span>
                     </Link> 
                     <Link to="/auth/signup">
-                        <span style={{ float: "right", marginRight: 15 }}>sign up</span>
+                        <span style={{ float: "right", marginRight: 15, fontSize: 18 }}>sign up</span>
                     </Link>
                 </>
             )}

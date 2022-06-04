@@ -65,7 +65,7 @@ const UploadForm = () => {
             <input type="checkBox" id="public-check" style={{marginBottom: 15}}
                 value={!isPublic} onChange={() => setIsPublic(!isPublic)}/>
             <label htmlFor="public-check">비공개</label>
-            <button type="submit" style={{width: "100%", height: 25, borderRadius: 3, cursor: "pointer"}}>제출</button>
+            <button type="submit" style={{width: "100%", height: 27, borderRadius: 3, cursor: "pointer"}}>제출</button>
         </form>
     );
 };

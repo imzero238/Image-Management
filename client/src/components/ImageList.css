@@ -1,6 +1,7 @@
 .image-list-container {
     display: flex;
     flex-wrap: wrap;
+    gap: 11px;
 }
 
 .image-list-container img {

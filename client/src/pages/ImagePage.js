@@ -55,16 +55,16 @@ const ImagePage = () => {
                 className="image" 
                 alt={imageId} src={`http://localhost:5050/uploads/${image.key}`}
             />
-            <button onClick={onSubmit} style={{marginTop: 10, marginBottom: 5}}>{hasLiked ? "unlike" : "like"}</button>
+            <button className="button" onClick={onSubmit} style={{marginTop: 10, marginBottom: 5}}>{hasLiked ? "unlike" : "like"}</button>
             {me && image.user._id === me.userId && (
-                <button 
+                <button className="button"
                     style={{float: "right", marginLeft: 10}}
                     onClick={deleteHandler}>
                     delete
                 </button>
             )}
             <br/>
-            <span>{image.likes.length} likes</span>
+            <span style={{fontSize: 17, marginLeft: 13}}>{image.likes.length} likes</span>
         </div>
     );
 };
