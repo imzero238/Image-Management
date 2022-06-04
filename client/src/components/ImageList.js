@@ -5,7 +5,7 @@ import { ImageContext } from "../context/ImageContext";
 import "./ImageList.css";
 
 const ImageList = () => {
-    const {images, privateImages, isPublic, setIsPublic, loaderMoreImages } = useContext(ImageContext);
+    const {images, privateImages, isPublic, setIsPublic, loaderMoreImages, imageLoading, imageError } = useContext(ImageContext);
     const [me] = useContext(AuthContext);
 
     const imgList = (isPublic ? images : privateImages).map((image) => (
@@ -21,7 +21,14 @@ const ImageList = () => {
             </button>}
             <br/>
             <div className="image-list-container">{imgList}</div>
-            <button onClick={loaderMoreImages} style={{width: 170, fontSize: 17, marginTop: 10}}>Load More Images</button>
+            {imageError && <div>Error</div>}
+            {imageLoading ? ( <div>Loading...</div> ) 
+                : (<button 
+                    onClick={loaderMoreImages} 
+                    style={{width: 170, fontSize: 17, marginTop: 10}}>
+                    Load More Images
+                </button>)
+            }
         </div>
     );
 };
