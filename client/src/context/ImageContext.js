@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, useContext } from "react";
+import React, { createContext, useEffect, useState, useContext, useRef } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 
@@ -12,8 +12,10 @@ export const ImageProvider = (prop) => {
     const [imageUrl, setImageUrl] = useState("/images");
     const [imageLoading, setImageLoading] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const pastImageUrlRef = useRef();
 
     useEffect(() => {
+        if(pastImageUrlRef.current === imageUrl) return;
         setImageLoading(true);
         axios
             .get(imageUrl)
@@ -26,7 +28,10 @@ export const ImageProvider = (prop) => {
                 console.error(err);
                 setImageError(err);
             })
-            .finally(() => setImageLoading(false));
+            .finally(() => {
+                setImageLoading(false);
+                pastImageUrlRef.current = imageUrl;
+            });
     }, [imageUrl, isPublic]);
 
     useEffect(() => {
