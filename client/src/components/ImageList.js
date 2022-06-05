@@ -16,6 +16,7 @@ const ImageList = () => {
             if(entry.isIntersecting) loaderMoreImages();
         });
         observer.observe(elementRef.current);
+        return () => observer.disconnect();
     }, [loaderMoreImages]);
 
     const imgList = isPublic 
