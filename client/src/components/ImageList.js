@@ -48,13 +48,7 @@ const ImageList = () => {
             <br/>
             <div className="image-list-container">{imgList}</div>
             {imageError && <div>Error</div>}
-            {imageLoading ? ( <div>Loading...</div> ) 
-                : (<button 
-                    onClick={loaderMoreImages} 
-                    style={{width: 170, fontSize: 17, marginTop: 10}}>
-                    Load More Images
-                </button>)
-            }
+            {imageLoading && <div>Loading...</div>}
         </div>
     );
 };
