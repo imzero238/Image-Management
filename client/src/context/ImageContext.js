@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, useContext, useCallback } from "react";
+import React, { createContext, useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 
@@ -17,13 +17,17 @@ export const ImageProvider = (prop) => {
         setImageLoading(true);
         axios
             .get(imageUrl)
-            .then((result) => setImages((prevData) => [...prevData, ...result.data]))
+            .then((result) => 
+                isPublic 
+                    ? setImages((prevData) => [...prevData, ...result.data]) 
+                    : setPrivateImages((prevData) => [...prevData, ...result.data])
+            )
             .catch((err) => {
                 console.error(err);
                 setImageError(err);
             })
             .finally(() => setImageLoading(false));
-    }, [imageUrl]);
+    }, [imageUrl, isPublic]);
 
     useEffect(() => {
         if(me){
@@ -39,19 +43,12 @@ export const ImageProvider = (prop) => {
         }
     }, [me]);
 
-    const lastImageId = images.length > 0 ? images[images.length - 1]._id : null;
-
-    const loaderMoreImages = useCallback(() => {
-        if(imageLoading || !lastImageId) return;
-        setImageUrl(`/images?lastid=${lastImageId}`);
-    }, [lastImageId, imageLoading]);
-
     return (
         <ImageContext.Provider value={{
-            images, setImages, 
-            privateImages, setPrivateImages,
+            images: isPublic ? images : privateImages,
+            setImages: isPublic ? setImages : setPrivateImages,
             isPublic, setIsPublic,
-            loaderMoreImages,
+            setImageUrl,
             imageLoading,
             imageError
             }}>
