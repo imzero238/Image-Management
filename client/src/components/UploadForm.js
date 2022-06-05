@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "./UploadForm.css";
@@ -11,6 +11,7 @@ const UploadForm = () => {
     const [previews, setPreviews] = useState([]);
     const [percent, setPercent] = useState(0);
     const [isPublic, setIsPublic] = useState(true);
+    const inputRef = useRef();
      
     const imageSelectHandler = async (event) => {
         const imageFiles = event.target.files;
@@ -51,11 +52,13 @@ const UploadForm = () => {
             setTimeout(() => {
                 setPercent(0);
                 setPreviews([]);
+                inputRef.current.value = null;
             }, 3000);
         } catch (err) {
             toast.error(err.message.data.message);
             setPercent(0);
             setPreviews([]);
+            inputRef.current.value = null;
             console.error(err);
         }
     };
@@ -78,7 +81,11 @@ const UploadForm = () => {
             <ProgressBar percent ={percent} />
             <div className="file-dropper">
             {fileName}
-            <input id="image" type="file" multiple accept="image/*" onChange = {imageSelectHandler}/>
+            <input 
+                id="image" type="file" 
+                ref={(ref) => (inputRef.current = ref)}
+                multiple accept="image/*" onChange = {imageSelectHandler}
+            />
             </div>
             <input type="checkBox" id="public-check" style={{marginBottom: 15}}
                 value={!isPublic} onChange={() => setIsPublic(!isPublic)}/>
