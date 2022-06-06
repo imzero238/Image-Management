@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ImageContext } from "../context/ImageContext";
 import { AuthContext } from "../context/AuthContext";
@@ -14,27 +14,25 @@ const ImagePage = () => {
     const [image, setImage] = useState();
     const [error, setError] = useState(false);
     const navigate = useNavigate();
-    const imageRef = useRef();
     
     useEffect(() => {
-        imageRef.current = images.find((image) => image._id === imageId);
+        const img = images.find((image) => image._id === imageId);
+        if(img) setImage(img);
     }, [images, imageId]);
 
     useEffect(() => {
-        if(imageRef.current) 
-            setImage(imageRef.current);
-        else
-            axios
-                .get(`/images/${imageId}`)
-                .then(({data}) => {
-                    setError(false);
-                    setImage(data)
-                })
-                .catch((err) => {
-                    setError(true);
-                    toast.error(err.response.data.message)
-                });
-    }, [imageId]);
+        if(image && image._id === imageId) return; 
+        axios
+            .get(`/images/${imageId}`)
+            .then(({data}) => {
+                setError(false);
+                setImage(data)
+            })
+            .catch((err) => {
+                setError(true);
+                toast.error(err.response.data.message)
+            });
+    }, [image, imageId]);
 
     useEffect(() => {
         if(me && image && image.likes.includes(me.userId)) setHasLiked(true);
@@ -84,7 +82,7 @@ const ImagePage = () => {
                 </button>
             )}
             <br/>
-            <span style={{fontSize: 17, marginLeft: 13}}>{image.likes.length} likes</span>
+            <span style={{fontSize: 25, marginLeft: 13}}>{image.likes.length} likes</span>
         </div>
     );
 };
