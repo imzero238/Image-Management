@@ -71,7 +71,7 @@ const ImagePage = () => {
         <div>
             <img 
                 className="image" 
-                alt={imageId} src={`http://localhost:5050/uploads/${image.key}`}
+                alt={imageId} src={`https://image-upload-management.s3.ap-northeast-2.amazonaws.com/raw/${image.key}`}
             />
             <button className="button" onClick={onSubmit} style={{marginTop: 10, marginBottom: 5}}>{hasLiked ? "unlike" : "like"}</button>
             {me && image.user._id === me.userId && (
