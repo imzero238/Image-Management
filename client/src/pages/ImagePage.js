@@ -44,8 +44,11 @@ const ImagePage = () => {
     const updateImage = (images, image) => [
         ...images.filter((image) => image._id !== imageId),
         image,
-    ].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-
+    ].sort((a, b) => {
+        if(a._id < b._id) return 1;
+        else return -1;
+    });
+    
     const onSubmit = async () => {
         const result = await axios.patch(`/images/${imageId}/${hasLiked?"unlike":"like"}`);
         if(result.data.public)
