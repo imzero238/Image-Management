@@ -2,7 +2,7 @@
 
 > - Front-end: REACT
 > - Back-end: Node.js
-> - Database: MongoDB
+> - Database: MongoDB, AWS S3
 
 <img src="https://user-images.githubusercontent.com/54436228/173770479-4ae612ed-3da8-4f5e-b134-f18ba1b0570e.gif" />
 
