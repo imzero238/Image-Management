@@ -9,13 +9,13 @@
 
 <img src="https://user-images.githubusercontent.com/54436228/173770479-4ae612ed-3da8-4f5e-b134-f18ba1b0570e.gif" />
 
-사용자가 이미지를 공개 또는 비공개로 업로드할 수 있고, [Cursor-based pagination](https://velog.io/@evelyn82ny/cursor-based-pagination) 기반의 Infinite Scroll으로 업로드한 사진을 볼 수 있는 서비스
+사용자가 이미지를 공개 또는 비공개로 업로드할 수 있고, [Cursor-based pagination](https://velog.io/@evelyn82ny/cursor-based-pagination) 기반의 Infinite Scroll으로 업로드한 사진을 볼 수 있는 서비스입니다.
 
 <br>
 
 ![png](/_img/service_architecture.png)
 
-- 사용자가 이미지에 대해 **GET** 요청하면 서버를 거치지 않고 클라이언트는 바로 AWS S3에 접근해 이미지를 가져온다. ()
+- 사용자가 이미지에 대해 **GET** 요청하면 서버를 거치지 않고 AWS S3에 접근해 이미지를 가져온다.
 - 사용자가 이미지에 대해 **POST** 요청하는 것은 **해당 서비스에 권한이 있어야 하므로** 서버에게 **Pre-signed Url**을 받아와 AWS S3에 접근해 저장한다.
 - 사용자가 이미지에 대해 **POST** 요청하면 서버는 MongoDB에도 저장한다.
 - 원본 이미지를 raw 폴더에 저장하고 **AWS Lambda** 를 사용해 원본 이미지를 2가지 사이즈로 규격화 한다.
