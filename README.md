@@ -13,7 +13,7 @@
 
 <br>
 
-![png](/_img/service_architecture.png)
+![](/_img/service_architecture.png)
 
 - 사용자가 이미지에 대해 **GET** 요청하면 서버를 거치지 않고 AWS S3에 접근해 이미지를 가져온다.
 - 사용자가 이미지에 대해 **POST** 요청하는 것은 **해당 서비스에 권한이 있어야 하므로** 서버에게 **Pre-signed Url**을 받아와 AWS S3에 접근해 저장한다.
